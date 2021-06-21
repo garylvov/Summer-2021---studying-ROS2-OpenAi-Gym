@@ -19,6 +19,7 @@ Sources consulted:
 http://wiki.ros.org/tf2/Tutorials/Writing%20a%20tf2%20listener%20%28C%2B%2B%29
 https://answers.ros.org/question/338515/ros2are-there-any-examples-of-tf2-broadcast-or-listener/
 https://github.com/ros2/geometry2/blob/ros2/tf2_ros/src/tf2_echo.cpp
+https://github.com/garylvov/learning_ROS2-MoveIt-ML_summer_2021/blob/main/learning_ros2/src/turtlesim/go_to_goal_turtle.cpp
 */
 #include <rclcpp/rclcpp.hpp>
 #include <rclcpp/time_source.hpp>
