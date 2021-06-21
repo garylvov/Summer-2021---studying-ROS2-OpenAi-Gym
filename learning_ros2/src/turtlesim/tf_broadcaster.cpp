@@ -18,7 +18,7 @@ garylvov.com
 Sources Consulted:
 http://wiki.ros.org/tf/Tutorials/Writing%20a%20tf%20broadcaster%20%28C%2B%2B%29
 https://answers.ros.org/question/360516/ros2-tf2-broadcaster/
-https://github.com/garylvov/learning_tf2/blob/master/learning_tf2/nodes/bcOptimized.py
+https://github.com/garylvov/learning_ROS-Gazebo_summer_2020/blob/main/learning_tf2/nodes/bcOptimized.py
 */
 #include "rclcpp/rclcpp.hpp"
 #include <turtlesim/msg/pose.hpp>
