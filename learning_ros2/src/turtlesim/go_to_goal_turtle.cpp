@@ -19,7 +19,7 @@ Sources consulted:
 https://docs.ros.org/en/galactic/Tutorials/Writing-A-Simple-Cpp-Service-And-Client.html
 https://docs.ros.org/en/galactic/Tutorials/Writing-A-Simple-Cpp-Publisher-And-Subscriber.html
 https://github.com/ros/ros_tutorials/blob/galactic-devel/turtlesim/tutorials/mimic.cpp
-https://github.com/garylvov/learning-ROS-scripts/blob/master/goToGoalTurtleV2.py 
+https://github.com/garylvov/learning_ROS-Gazebo_summer_2020/blob/main/starting_turtle_sim/goToGoalTurtleV3.py
 */
 #include <rclcpp/rclcpp.hpp>
 #include <cmath>
