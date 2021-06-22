@@ -71,7 +71,7 @@ private:
         double heading = (atan2(y,x));
 
         float lin = dist * 2.25;
-        float ang = heading * 4.25;c
+        float ang = heading * 4.25;
 
         if(dist < .4){reset();}
 
