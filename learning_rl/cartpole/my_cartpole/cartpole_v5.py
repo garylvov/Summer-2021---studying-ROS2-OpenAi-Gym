@@ -30,7 +30,7 @@ class CartPoleSolver():
         self.model = Sequential()
         self.model.add(Flatten(input_shape=(1,self.states)))
         self.model.add(Dense(12, activation='relu'))
-        self.model.add(Dense(24, activation='relu'))
+        self.model.add(Dense(28, activation='relu'))
         self.model.add(Dense(self.actions, activation='linear'))
         self.model.summary()
 
@@ -79,7 +79,8 @@ class CartPoleSolver():
         mean_q_line = plt.plot(self.mean_q, self.scores)
 
         plt.setp(loss_line,'color', 'g', 'linewidth', 2.0)
-        plt.setp(mae_line,'color', 'b', 'linewidth', 2.0)
+        plt.setp(mae_line,'
+        color', 'b', 'linewidth', 2.0)
         plt.setp(mean_q_line,'color', 'o', 'linewidth', 2.0)
         plt.legend()
         '''
@@ -97,6 +98,7 @@ class CartPoleSolver():
         self.episodes = (test.history['nb_steps'])
         print(len(self.scores))
         print(len(self.episodes))
+        
     def reset_model(self):
         del self.model
         del self.dqn
