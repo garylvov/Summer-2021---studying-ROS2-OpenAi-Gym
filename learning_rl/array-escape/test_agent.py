@@ -3,7 +3,7 @@ import gym
 import time
 
 def random_agent(episodes=100000):
-	env = gym.make("array_escape-v1")
+	env = gym.make("array_escape-v2")
 	env.reset()
 	env.render()
 	for e in range(episodes):

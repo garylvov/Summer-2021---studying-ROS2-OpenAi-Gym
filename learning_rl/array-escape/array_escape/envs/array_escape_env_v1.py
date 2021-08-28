@@ -1,5 +1,4 @@
 import time
-import random
 import gym
 import numpy as np
 from gym import spaces, error
@@ -84,30 +83,7 @@ class ArrayEscapeEnvV1(gym.Env):
         
         return np.array(self.state), reward, done, {}
 
-    def render(self, mode='human'):
-        
-        self.screen_side = 800
-        self.line_dist = self.screen_side / self.grid_size
 
-        if self.viewer is None:
-            self.viewer = rendering.Viewer(self.screen_side, self.screen_side)
-        time.sleep(.15)
-        for y in range(self.items_depth):
-            box = rendering.FilledPolygon([
-                (self.items[y][0] * self.line_dist, self.items[y][1] * self.line_dist), 
-                ((self.items[y][0] * self.line_dist) + self.line_dist, self.items[y][1] * self.line_dist), 
-                ((self.items[y][0] * self.line_dist) + self.line_dist, (self.items[y][1] * self.line_dist) + self.line_dist), 
-                ((self.items[y][0] * self.line_dist), (self.items[y][1] * self.line_dist) + self.line_dist)])
-            if(y == 0):
-                box.set_color(0, 50, 50)
-            if(y == 1):
-                box.set_color(0, 0, 255)
-            if(y == 2):
-                box.set_color(0, 255, 0)
-            if(y > 2):
-                    box.set_color(255, 0, 0)
-            self.viewer.add_geom(box)
-        return self.viewer.render(return_rgb_array=mode == "rgb_array")
 
     def _create_populated_array(self, num):
         array = np.empty((self.items_depth, 2)).astype(np.int32)
