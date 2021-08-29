@@ -31,7 +31,7 @@ class ArrayEscapeEnvV2(gym.Env):
                     or self.coords[1][1] + self.movement[1][action] < 0
                     or self.grid[int(self.coords[1][0] + self.movement[0][action])][int(self.coords[1][1] + self.movement[1][action])] != 0
                     )
-        reward = -1 #dist * -5
+        reward = -1 #-2/dist, have to add check that dist != 0
         if not done:
             self.coords[0][0] = self.coords[1][0]
             self.coords[0][1] = self.coords[1][1]
