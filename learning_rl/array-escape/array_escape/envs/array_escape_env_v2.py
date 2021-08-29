@@ -8,7 +8,7 @@ from gym.envs.classic_control import rendering
 class ArrayEscapeEnvV2(gym.Env):
     metadata = {'render.modes': ['human']}
     def __init__(self):
-        self.grid_size = 10
+        self.grid_size = 5
         self.num_mines = self.grid_size * 0
         self.num_coords = self.num_mines + 3
         self.movement = [[0, 1, 0,-1], [1, 0, 1, 0]]
@@ -16,6 +16,7 @@ class ArrayEscapeEnvV2(gym.Env):
         self.FAILURE_REWARD = -1000
         self.STEP_REWARD = 0
         self.viewer = None
+        self.elapsed_episodes = 0
         low = np.full((self.num_coords, 2), 0)
         high = np.full((self.num_coords, 2), self.grid_size)
         self.action_space = spaces.Discrete(4)
@@ -30,7 +31,7 @@ class ArrayEscapeEnvV2(gym.Env):
                     or self.coords[1][1] + self.movement[1][action] < 0
                     or self.grid[int(self.coords[1][0] + self.movement[0][action])][int(self.coords[1][1] + self.movement[1][action])] != 0
                     )
-        reward = 0 #dist * -5
+        reward = -1 #dist * -5
         if not done:
             self.coords[0][0] = self.coords[1][0]
             self.coords[0][1] = self.coords[1][1]
@@ -38,11 +39,11 @@ class ArrayEscapeEnvV2(gym.Env):
             self.coords[1][1] += self.movement[1][action]
             self._update_grid()
             self.state = self.coords
-        else:
-            if self.coords[1][0] != self.coords[2][0]:
-                reward = self.FAILURE_REWARD
-            elif self.coords[1][1] == self.coords[2][1]:
+        else:   
+            if self.coords[1][1] == self.coords[2][1] and self.coords[1][0] != self.coords[2][0]:
                 reward = self.SUCCESS_REWARD
+            else:
+                reward = self.FAILURE_REWARD
 
         return np.array(self.state), reward, done, {}
 
@@ -51,6 +52,7 @@ class ArrayEscapeEnvV2(gym.Env):
         self._set_initial_grid()
         self.state = self.coords
         self._reset_render()
+        self.elapsed_episodes += 1
         return np.array(self.state)
 
     def render(self, mode='human'):
