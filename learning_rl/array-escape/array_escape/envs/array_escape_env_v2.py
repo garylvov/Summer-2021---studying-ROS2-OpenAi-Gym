@@ -8,8 +8,8 @@ from gym.envs.classic_control import rendering
 class ArrayEscapeEnvV2(gym.Env):
     metadata = {'render.modes': ['human']}
     def __init__(self):
-        self.grid_size = 5
-        self.num_mines = self.grid_size * 0
+        self.grid_size = 10
+        self.num_mines = self.grid_size * 2
         self.num_coords = self.num_mines + 3
         self.movement = [[0, 1, 0,-1], [1, 0, 1, 0]]
         self.SUCCESS_REWARD = 1000
