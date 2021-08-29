@@ -16,15 +16,15 @@ class DQN():
         self.create_memory(policy)
 
     def create_env(self):
-        self.env = gym.make('array_escape-v1')
+        self.env = gym.make('array_escape-v2')
         self.states = self.env.observation_space.shape[0]
         self.actions = self.env.action_space.n
         
     def create_model(self):
         self.model = Sequential()
         self.model.add(Flatten(input_shape=(1, self.states, 2)))
-        self.model.add(Dense(20, activation='relu'))
-        self.model.add(Dense(40, activation='relu'))
+        self.model.add(Dense(50, activation='relu'))
+        self.model.add(Dense(100, activation='relu'))
         self.model.add(Dense(self.actions, activation='linear'))
         self.model.summary()
 

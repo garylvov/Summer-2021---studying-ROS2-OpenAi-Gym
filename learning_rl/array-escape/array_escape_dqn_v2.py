@@ -3,17 +3,17 @@ import gym
 import numpy as np 
 import matplotlib.pyplot as plt
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Flatten
+from tensorflow.keras.layers import Dense, Flatten, Conv2D
 from tensorflow.keras.optimizers import Adam
 from rl.agents import DQNAgent
-from rl.policy import BoltzmannQPolicy
+from rl.policy import BoltzmannQPolicy, EpsGreedyQPolicy, LinearAnnealedPolicy
 from rl.memory import SequentialMemory
 
 class DQN():
-    def __init__(self, policy=BoltzmannQPolicy()):
+    def __init__(self):
         self.create_env()
         self.create_model()
-        self.create_memory(policy)
+        self.create_memory()
 
     def create_env(self):
         self.env = gym.make('array_escape-v2')
@@ -22,15 +22,17 @@ class DQN():
         
     def create_model(self):
         self.model = Sequential()
-        self.model.add(Flatten(input_shape=(1, self.states, self.states)))
-        self.model.add(Dense(50, activation='relu'))
-        self.model.add(Dense(100, activation='relu'))
+        self.model.add(Conv2D(32, 1, strides=8, input_shape=(1, self.states, self.states), activation="relu"))
+        self.model.add(Conv2D(64, 1, strides=4, activation="relu"))
+        self.model.add(Conv2D(64, 1, strides=3, activation="relu"))
+        self.model.add(Flatten())
+        self.model.add(Dense(512, activation="relu"))
         self.model.add(Dense(self.actions, activation='linear'))
         self.model.summary()
 
-    def create_memory(self, policy):
-        self.policy = policy
-        self.memory = SequentialMemory(limit=1000000, window_length=1)
+    def create_memory(self):
+        self.policy = LinearAnnealedPolicy(EpsGreedyQPolicy(), attr='eps', value_max=1, value_min=.1, value_test=.2, nb_steps=1000000)
+        self.memory = SequentialMemory(limit=10000000, window_length=1)
         self.dqn = DQNAgent(model=self.model, memory=self.memory, policy = self.policy,
                             nb_actions = self.actions, nb_steps_warmup=100, target_model_update=1e-2)
         self.dqn.compile(Adam(learning_rate=1e-3), metrics=['mae'])

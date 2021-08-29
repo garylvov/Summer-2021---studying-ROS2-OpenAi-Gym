@@ -9,34 +9,35 @@ class ArrayEscapeEnvV2(gym.Env):
     metadata = {'render.modes': ['human']}
     def __init__(self):
         self.grid_size = 10
-        self.num_mines = self.grid_size * 2
+        self.num_mines = self.grid_size * 0
         self.num_coords = self.num_mines + 3
         self.movement = [[0, 1, 0,-1], [1, 0, 1, 0]]
         self.SUCCESS_REWARD = 1000
         self.FAILURE_REWARD = -1000
-        self.STEP_REWARD = -1
+        self.STEP_REWARD = 0
         self.viewer = None
-        low = np.full((self.grid_size, self.grid_size), 0)
-        high = np.full((self.grid_size, self.grid_size), 4)
+        low = np.full((self.num_coords, 2), 0)
+        high = np.full((self.num_coords, 2), self.grid_size)
         self.action_space = spaces.Discrete(4)
         self.observation_space = spaces.Box(low, high, dtype=np.int32)
         self._seed()
 
     def step(self, action):
+        dist = (((self.coords[1][0] - self.coords[2][0])**2 + (self.coords[1][1] - self.coords[2][1])**2)**.5)
         done = bool(self.coords[1][0] + self.movement[0][action] > self.grid_size -1
                     or self.coords[1][1] + self.movement[1][action] > self.grid_size -1
                     or self.coords[1][0] + self.movement[0][action] < 0
                     or self.coords[1][1] + self.movement[1][action] < 0
                     or self.grid[int(self.coords[1][0] + self.movement[0][action])][int(self.coords[1][1] + self.movement[1][action])] != 0
                     )
-        reward = self.STEP_REWARD
+        reward = 0 #dist * -5
         if not done:
             self.coords[0][0] = self.coords[1][0]
             self.coords[0][1] = self.coords[1][1]
             self.coords[1][0] += self.movement[0][action]
             self.coords[1][1] += self.movement[1][action]
-            self.state = self._update_grid()
-            #self.reward = self.STEP_REWARD
+            self._update_grid()
+            self.state = self.coords
         else:
             if self.coords[1][0] != self.coords[2][0]:
                 reward = self.FAILURE_REWARD
@@ -47,14 +48,12 @@ class ArrayEscapeEnvV2(gym.Env):
 
     def reset(self):
         self._place_items()
-        self._place_items()
         self._set_initial_grid()
-        self.state = self._update_grid()
+        self.state = self.coords
         self._reset_render()
         return np.array(self.state)
 
     def render(self, mode='human'):
-        
         self.screen_side = 800
         self.line_dist = self.screen_side / self.grid_size
 
@@ -81,13 +80,19 @@ class ArrayEscapeEnvV2(gym.Env):
     def _place_items(self):
         self.grid = np.full((self.grid_size, self.grid_size), 0)
         self.coords = np.empty((self.num_coords, 2))
-        self.coords[1][0] = 0
-        self.coords[1][1] = 0
 
-        for x in range(2, self.num_coords):
-            self.coords[x][0] = self.np_random.randint(2, (self.grid_size -1))
-            self.coords[x][1] = self.np_random.randint(2, (self.grid_size -1))
+        for y in range(1, self.num_coords):
+            self.coords[y][0] = self.np_random.randint(2, (self.grid_size -1))
+            self.coords[y][1] = self.np_random.randint(2, (self.grid_size -1))
         
+        for y in range(2, self.num_coords):
+            if(self.coords[1][0] == self.coords[y][0] and self.coords[1][1] == self.coords[y][1]):
+                self.coords[y][0] = self.np_random.randint(2, (self.grid_size -1))
+                self.coords[y][1] = self.np_random.randint(2, (self.grid_size -1))
+            elif(self.coords[2][0] == self.coords[y][0] and self.coords[2][1] == self.coords[y][1]):
+                self.coords[y][0] = self.np_random.randint(2, (self.grid_size -1))
+                self.coords[y][1] = self.np_random.randint(2, (self.grid_size -1))
+
     def _set_initial_grid(self):
         for x in range(1, self.num_coords):
             int_column_coord = int(self.coords[x][0])
@@ -99,12 +104,9 @@ class ArrayEscapeEnvV2(gym.Env):
             else:                                           #mine
                 self.grid[int_column_coord] [int_row_coord] = 4
     
-    def _update_grid(self):
-        if self.coords[0][0] != None:
-            self.grid[int(self.coords[0][0])][int(self.coords[0][1])] = 1
-            
+    def _update_grid(self):        
+        self.grid[int(self.coords[0][0])][int(self.coords[0][1])] = 1    
         self.grid[int(self.coords[1][0])][int(self.coords[1][1])] = 2
-        return self.grid
     
     def _seed(self, seed=None):
         self.np_random, seed = seeding.np_random(seed)
